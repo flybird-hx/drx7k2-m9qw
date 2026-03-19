@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCI论文执行计划 · 建筑排水系统压力研究</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:         #f6f8fa;
+    --bg2:        #ffffff;
+    --bg3:        #f0f2f5;
+    --border:     #d0d7de;
+    --border2:    #e4e8ec;
+    --text:       #1a1f2e;
+    --text-dim:   #57606a;
+    --text-dimmer:#8c959f;
+    --accent:     #0969da;
+    --green:      #1a7f37;
+    --green-bg:   #dafbe1;
+    --yellow:     #9a6700;
+    --yellow-bg:  #fff8c5;
+    --red:        #cf222e;
+    --red-bg:     #ffebe9;
+    --orange:     #bc4c00;
+    --orange-bg:  #fff1e5;
+    --purple:     #6639ba;
+    --shadow:     0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg:  0 4px 12px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding-bottom: 72px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .title-block h1 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  .title-block .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dimmer);
+    margin-top: 3px;
+    letter-spacing: 0.06em;
+  }
+
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .badge-blue  { color: var(--accent); border-color: #cae1ff; background: #f0f7ff; }
+  .badge-green { color: var(--green);  border-color: #9be9a8; background: var(--green-bg); }
+
+  /* ── 总进度 ── */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--bg3);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border2);
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0969da, #218bff);
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* 阶段胶囊 */
+  .phase-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .phase-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .phase-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+
+  /* ── 主体 ── */
+  .main {
+    max-width: 880px;
+    margin: 24px auto;
+    padding: 0 20px;
+  }
+
+  /* ── 阶段块 ── */
+  .phase {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border2);
+    transition: background 0.15s;
+  }
+
+  .phase-header:hover { background: var(--bg3); }
+
+  .phase-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dimmer);
+    letter-spacing: 0.08em;
+    min-width: 24px;
+  }
+
+  .phase-title {
+    font-size: 14px;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .phase-prog-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .phase-prog-mini .bar {
+    width: 72px;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid var(--border2);
+  }
+
+  .phase-prog-mini .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .phase-prog-mini .pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .chevron {
+    color: var(--text-dimmer);
+    font-size: 11px;
+    transition: transform 0.22s;
+  }
+
+  .phase.collapsed .chevron { transform: rotate(-90deg); }
+
+  .phase-body {
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .phase.collapsed .phase-body {
+    max-height: 0 !important;
+  }
+
+  /* ── 任务行 ── */
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border2);
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+
+  .task:last-child { border-bottom: none; }
+  .task:hover { background: #f6f8fa; }
+
+  .task.done { background: #fafbfc; }
+  .task.done .task-title {
+    text-decoration: line-through;
+    color: var(--text-dimmer);
+  }
+  .task.done .task-desc { color: var(--text-dimmer); opacity: 0.7; }
+
+  /* 自定义 checkbox */
+  .cb-wrap {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    position: relative;
+  }
+
+  .cb-wrap input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin: 0;
+    z-index: 2;
+  }
+
+  .cb-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    pointer-events: none;
+  }
+
+  .cb-wrap:hover .cb-box { border-color: var(--accent); }
+  .cb-wrap input:checked ~ .cb-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .cb-box svg { display: none; }
+  .cb-wrap input:checked ~ .cb-box svg { display: block; }
+
+  .task-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dimmer);
+    min-width: 40px;
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .task-content { flex: 1; min-width: 0; }
+
+  .task-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .task-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* 优先级 */
+  .prio {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .prio-3 { background: var(--red-bg);    color: var(--red);    border: 1px solid #ffcecb; }
+  .prio-2 { background: var(--yellow-bg); color: var(--yellow); border: 1px solid #f5d76e; }
+  .prio-1 { background: var(--bg3);       color: var(--text-dimmer); border: 1px solid var(--border); }
+
+  /* 输出物 */
+  .output-tag {
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* 状态标签 */
+  .status-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+  }
+  .s-done { background: var(--green-bg);  color: var(--green);  border: 1px solid #9be9a8; }
+  .s-next { background: var(--orange-bg); color: var(--orange); border: 1px solid #f9bc7a; }
+
+  /* ── 底部固定栏 ── */
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255,0.95);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 10px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 200;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  }
+
+  .footer-stats {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .footer-stats b { color: var(--accent); font-weight: 600; }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .save-indicator {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 0.3s;
+    letter-spacing: 0.04em;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  .btn {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid;
+  }
+
+  .btn-reset {
+    background: var(--bg2);
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+
+  .btn-reset:hover {
+    background: var(--red-bg);
+    border-color: #ffcecb;
+    color: var(--red);
+  }
+
+  /* 阶段颜色 */
+  .phase[data-ph="1"] { border-left: 4px solid #0969da; }
+  .phase[data-ph="1"] .phase-title { color: #0969da; }
+  .phase[data-ph="1"] .bar-fill { background: #0969da; }
+  .phase[data-ph="1"] .phase-pill-ref { color: #0969da; border-color: #cae1ff; background: #f0f7ff; }
+
+  .phase[data-ph="2"] { border-left: 4px solid #1a7f37; }
+  .phase[data-ph="2"] .phase-title { color: #1a7f37; }
+  .phase[data-ph="2"] .bar-fill { background: #1a7f37; }
+
+  .phase[data-ph="3"] { border-left: 4px solid #bc4c00; }
+  .phase[data-ph="3"] .phase-title { color: #bc4c00; }
+  .phase[data-ph="3"] .bar-fill { background: #bc4c00; }
+
+  .phase[data-ph="4"] { border-left: 4px solid #6639ba; }
+  .phase[data-ph="4"] .phase-title { color: #6639ba; }
+  .phase[data-ph="4"] .bar-fill { background: #6639ba; }
+
+  .phase[data-ph="5"] { border-left: 4px solid #cf222e; }
+  .phase[data-ph="5"] .phase-title { color: #cf222e; }
+  .phase[data-ph="5"] .bar-fill { background: #cf222e; }
+
+  @media (max-width: 600px) {
+    .header { padding: 14px 16px 12px; }
+    .main   { padding: 0 12px; margin: 16px auto; }
+    .footer-bar { padding: 8px 16px; }
+    .header-top h1 { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="title-block">
+      <h1>建筑排水系统多立管并联压力研究 &middot; SCI论文执行计划</h1>
+      <div class="subtitle">BUILDING AND ENVIRONMENT &nbsp;&middot;&nbsp; PhD DISSERTATION &nbsp;&middot;&nbsp; 18F · 5-RISER · 33 CASES</div>
+    </div>
+    <div class="badges">
+      <span class="badge badge-blue">&#128196; Building &amp; Environment &nbsp; IF &asymp; 7.4</span>
+      <span class="badge badge-green">&#10003; 勾选状态自动保存</span>
+    </div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="total-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-text" id="total-text">计算中...</div>
+  </div>
+  <div class="phase-pills" id="phase-pills"></div>
+</div>
+
+<div class="main" id="main-content"></div>
+
+<div class="footer-bar">
+  <div class="footer-stats" id="footer-stats">加载中...</div>
+  <div class="footer-right">
+    <span class="save-indicator" id="save-ind">&#10003; 已保存</span>
+    <button class="btn btn-reset" onclick="resetAll()">重置全部</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 数据定义
+// ============================================================
+var PHASES = [
+  {
+    id: 1, title: "阶段一：数据准备",
+    pillColor: "#0969da", pillBg: "#f0f7ff", pillBorder: "#cae1ff",
+    tasks: [
+      { id:"P1-1", prio:3, title:"数据完整性核查",
+        desc:"确认全部33个工况CSV完整，建立工况清单表（含文件名、重复次数、采集时长）",
+        output:"工况清单表", defaultDone:true, nextStep:false },
+      { id:"P1-2", prio:3, title:"重复性评估与最佳三组筛选",
+        desc:"穷举所有重复组合，以楼层级 Pmin / Pmax 峰值CV（等权，各×1）为评分依据，输出汇总总表。已验证：原始未清洗数据重复性优于清洗后数据（较差工况从16个降至6个）",
+        output:"重复性汇总总表", defaultDone:true, nextStep:false },
+      { id:"P1-3", prio:3, title:"工况参数编码（case_params.csv）",
+        desc:"建立完整参数表：排水管编号、各管排水楼层范围、各管流量（L/s）、监测管编号、监测管状态（排水●★ / 不排水○★）",
+        output:"case_params.csv", defaultDone:false, nextStep:true },
+      { id:"P1-4", prio:3, title:"批量特征提取",
+        desc:"对33个工况最佳三组原始数据运行 Phase1 脚本，提取 Pmin / Pmax / RMS / 衰减系数k / 主频等特征，输出 all_cases_features.csv",
+        output:"all_cases_features.csv", defaultDone:false, nextStep:true },
+    ]
+  },
+  {
+    id: 2, title: "阶段二：压力规律分析（核心发现）",
+    pillColor: "#1a7f37", pillBg: "#dafbe1", pillBorder: "#9be9a8",
+    tasks: [
+      { id:"P2-1", prio:3, title:"压力时空分布描述性分析",
+        desc:"全工况压力热力图（Pmin 与 RMS），时程总览，最危险楼层统计分布",
+        output:"Figure 1", defaultDone:false, nextStep:false },
+      { id:"P2-2", prio:3, title:"多工况压力热力图（±250 Pa 阈值标注）",
+        desc:"33工况×15楼层矩阵图，标注超阈值单元格；按 C/CC/D/DD/E/EE 系列分组分隔",
+        output:"Figure 2", defaultDone:false, nextStep:false },
+      { id:"P2-3", prio:3, title:"管数效应分析",
+        desc:"2管→3管→4管压力均值变化趋势。注意反直觉发现：高流量下管数越多压力反而越小，核心原因是单管流量随管数增加而减小——单管流量才是主控变量",
+        output:"Figure 3", defaultDone:false, nextStep:false },
+      { id:"P2-4", prio:3, title:"监测管状态效应分析",
+        desc:"排水（●★）vs 不排水（○★）对比，干扰贡献比。重点分析 E1 工况（4管高流量，监测管不排水，Pmin=-365 Pa 仍超阈值），证明纯干扰机制的独立危险性",
+        output:"Figure 4", defaultDone:false, nextStep:false },
+      { id:"P2-5", prio:2, title:"流量效应分析（P ∝ Qⁿ 验证）",
+        desc:"以监测管实际流量（L/s）为连续自变量做回归，拟合指数 n，验证是否满足 P∝Q²（需要 case_params.csv 中的各管流量数据）",
+        output:"Figure 5", defaultDone:false, nextStep:false },
+      { id:"P2-6", prio:3, title:"IAF 干扰增强系数定义与计算",
+        desc:"IAF = P_multi / P_single，建立全文核心指标，确定单管基准工况选取策略（以 CC 系列最小值或单独单管实验为基准）",
+        output:"IAF 表 + Figure 6", defaultDone:false, nextStep:false },
+      { id:"P2-7", prio:3, title:"垂向压力传播规律深化分析",
+        desc:"指数衰减拟合 P(z)=P₀e^(-kz)，重点解释 k<0 的6个工况（CC6/DD2/EE4/EE5/C5/E5）的物理机制——压力向上放大，挑战传统'底层最危险'认知",
+        output:"Figure 7", defaultDone:false, nextStep:false },
+    ]
+  },
+  {
+    id: 3, title: "阶段三：工程意义分析",
+    pillColor: "#bc4c00", pillBg: "#fff1e5", pillBorder: "#f9bc7a",
+    tasks: [
+      { id:"P3-1", prio:3, title:"水封安全风险评估矩阵",
+        desc:"以 ±250 Pa 为安全阈值，建立三级风险矩阵（危险 <-250 Pa / 警戒 -150~-250 Pa / 安全 >-150 Pa），统计各工况危险楼层数；高流量工况100%超阈值为核心结论",
+        output:"Table 2 + Figure 8", defaultDone:false, nextStep:false },
+      { id:"P3-2", prio:2, title:"与国际规范对比",
+        desc:"对照 GB 50015-2019、EN 12056-2、AS/NZS 3500，评估现行规范在多立管并联裙楼工况下的适用性与潜在低估风险",
+        output:"Table 3", defaultDone:false, nextStep:false },
+      { id:"P3-3", prio:2, title:"多因素 Spearman 相关性分析",
+        desc:"计算管数、单管流量、监测管状态、楼层位置与 Pmin/RMS 的 Spearman 相关系数，绘制热力图",
+        output:"Figure 9", defaultDone:false, nextStep:false },
+      { id:"P3-4", prio:2, title:"典型工况时频深度分析",
+        desc:"STFT 或小波分析，选4个代表工况：最危险（C6）、纯干扰（E1）、k<0异常（CC6）、低流量对照（CC5）",
+        output:"Figure 10-13", defaultDone:false, nextStep:false },
+    ]
+  },
+  {
+    id: 4, title: "阶段四：预测模型",
+    pillColor: "#6639ba", pillBg: "#f5f0ff", pillBorder: "#d2b4fe",
+    tasks: [
+      { id:"P4-1", prio:3, title:"特征工程与建模数据集整合",
+        desc:"33工况×15楼层=495样本；特征变量：并联管数、监测管单管流量（L/s）、监测管状态（0/1）、楼层编号、楼层与最近排水点距离；目标变量：Pmin、RMS",
+        output:"建模数据集 (495×n)", defaultDone:false, nextStep:false },
+      { id:"P4-2", prio:3, title:"多元线性回归基准模型",
+        desc:"建立 Pmin ~ f(管数, 流量, 状态, 楼层) 线性基准，输出回归系数、p值、R²；作为非线性模型的对照基准",
+        output:"Table 4", defaultDone:false, nextStep:false },
+      { id:"P4-3", prio:3, title:"随机森林非线性模型",
+        desc:"80/20 随机分割，5折交叉验证，输出特征重要性排序（预期：单管流量 > 楼层位置 > 管数 > 监测管状态）",
+        output:"Figure 14-15", defaultDone:false, nextStep:false },
+      { id:"P4-4", prio:2, title:"模型对比与工程设计建议",
+        desc:"线性 vs 随机森林精度汇总（MAE/RMSE/R²），给出临界流量-管数组合预测曲线，提出设计安全裕度量化建议",
+        output:"Table 5", defaultDone:false, nextStep:false },
+    ]
+  },
+  {
+    id: 5, title: "阶段五：论文写作与投稿",
+    pillColor: "#cf222e", pillBg: "#ffebe9", pillBorder: "#ffcecb",
+    tasks: [
+      { id:"P5-1", prio:3, title:"出版级图表制作",
+        desc:"分辨率 ≥ 300 dpi，双栏宽83mm / 单栏宽176mm，字号 ≥ 8 pt，统一配色方案（不含中文字符），所有坐标轴标签和图例使用英文",
+        output:"全部发表级图表", defaultDone:false, nextStep:false },
+      { id:"P5-2", prio:3, title:"论文正文写作",
+        desc:"结构：Introduction → Experimental Setup → Results (§3.1 时空分布 / §3.2 管数效应 / §3.3 监测管状态 / §3.4 流量效应 / §3.5 IAF / §3.6 垂向传播) → Discussion → Conclusions，目标约8000字",
+        output:"论文草稿", defaultDone:false, nextStep:false },
+      { id:"P5-3", prio:2, title:"文献综述整理",
+        desc:"目标30-45篇，>50%近5年文献；核心方向：Swaffield经典文献、水封失效机制、多立管系统、裙楼/高层排水规范",
+        output:"参考文献库", defaultDone:false, nextStep:false },
+      { id:"P5-4", prio:2, title:"投稿材料准备",
+        desc:"Cover Letter（强调全尺寸实验 + IAF创新指标 + 规范适用性质疑）、Highlights（5条）、Graphical Abstract（单图概括核心发现）",
+        output:"完整投稿包", defaultDone:false, nextStep:false },
+    ]
+  }
+];
+
+// ============================================================
+// localStorage 持久化
+// ============================================================
+var STORAGE_KEY = "sci_plan_checklist_v2";
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function isDone(taskId, defaultDone) {
+  var s = loadState();
+  return taskId in s ? s[taskId] : defaultDone;
+}
+
+function setDone(taskId, val) {
+  var s = loadState();
+  s[taskId] = val;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+  } catch(e) {}
+  // 显示"已保存"提示
+  var ind = document.getElementById("save-ind");
+  ind.classList.add("show");
+  clearTimeout(ind._t);
+  ind._t = setTimeout(function(){ ind.classList.remove("show"); }, 1800);
+}
+
+function resetAll() {
+  if (!confirm("确认重置所有勾选状态？\n（此操作不可撤销）")) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  render();
+}
+
+// ============================================================
+// 渲染
+// ============================================================
+function render() {
+  var main  = document.getElementById("main-content");
+  var pills = document.getElementById("phase-pills");
+  main.innerHTML  = "";
+  pills.innerHTML = "";
+
+  var totalDone = 0, totalAll = 0;
+
+  PHASES.forEach(function(phase) {
+    var tasks     = phase.tasks;
+    var phaseDone = tasks.filter(function(t){ return isDone(t.id, t.defaultDone); }).length;
+    var pct       = Math.round(phaseDone / tasks.length * 100);
+    totalDone += phaseDone;
+    totalAll  += tasks.length;
+
+    // 胶囊
+    var pill = document.createElement("div");
+    pill.className   = "phase-pill";
+    pill.textContent = "P" + phase.id + " " + phaseDone + "/" + tasks.length;
+    pill.style.color        = phase.pillColor;
+    pill.style.borderColor  = phase.pillBorder;
+    pill.style.background   = phase.pillBg;
+    pill.onclick = function(){
+      document.getElementById("phase-" + phase.id)
+        .scrollIntoView({behavior:"smooth", block:"start"});
+    };
+    pills.appendChild(pill);
+
+    // 阶段块
+    var block = document.createElement("div");
+    block.className   = "phase";
+    block.dataset.ph  = phase.id;
+    block.id          = "phase-" + phase.id;
+
+    var taskHtml = tasks.map(function(t){
+      var done     = isDone(t.id, t.defaultDone);
+      var prioText = t.prio===3 ? "★★★ 必须" : t.prio===2 ? "★★ 重要" : "★ 可选";
+      var prioClass= "prio-" + t.prio;
+      var statusHtml = done
+        ? '<span class="status-tag s-done">&#10003; 已完成</span>'
+        : t.nextStep
+        ? '<span class="status-tag s-next">&#8594; 下一步</span>'
+        : "";
+      return [
+        '<div class="task ' + (done?"done":"") + '" id="task-' + t.id + '" ',
+            'onclick="toggleTask(\'' + t.id + '\',' + t.defaultDone + ')">',
+          '<label class="cb-wrap" onclick="event.stopPropagation()">',
+            '<input type="checkbox" ' + (done?"checked":"") + ' ',
+                'onchange="toggleTask(\'' + t.id + '\',' + t.defaultDone + ')">',
+            '<div class="cb-box">',
+              '<svg width="10" height="8" viewBox="0 0 10 8" fill="none">',
+                '<path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" ',
+                      'stroke-linecap="round" stroke-linejoin="round"/>',
+              '</svg>',
+            '</div>',
+          '</label>',
+          '<span class="task-id">' + t.id + '</span>',
+          '<div class="task-content">',
+            '<div class="task-title">' + t.title + '</div>',
+            '<div class="task-desc">'  + t.desc  + '</div>',
+            '<div class="task-meta">',
+              '<span class="prio ' + prioClass + '">' + prioText + '</span>',
+              '<span class="output-tag">&#8594; ' + t.output + '</span>',
+              statusHtml,
+            '</div>',
+          '</div>',
+        '</div>'
+      ].join("");
+    }).join("");
+
+    block.innerHTML = [
+      '<div class="phase-header" onclick="togglePhase(' + phase.id + ')">',
+        '<span class="phase-num">P' + phase.id + '</span>',
+        '<span class="phase-title">' + phase.title + '</span>',
+        '<div class="phase-prog-mini">',
+          '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>',
+          '<span class="pct">' + phaseDone + '/' + tasks.length + '</span>',
+        '</div>',
+        '<span class="chevron">&#9662;</span>',
+      '</div>',
+      '<div class="phase-body" id="body-' + phase.id + '">',
+        taskHtml,
+      '</div>'
+    ].join("");
+
+    main.appendChild(block);
+  });
+
+  // 总进度
+  var pct = Math.round(totalDone / totalAll * 100);
+  document.getElementById("total-bar").style.width = pct + "%";
+  document.getElementById("total-text").textContent =
+    "总进度 " + totalDone + "/" + totalAll + "  (" + pct + "%)";
+  document.getElementById("footer-stats").innerHTML =
+    "已完成 <b>" + totalDone + "</b> 项 &nbsp;·&nbsp; " +
+    "剩余 <b>" + (totalAll-totalDone) + "</b> 项 &nbsp;·&nbsp; " +
+    "总进度 <b>" + pct + "%</b>";
+
+  // 展开所有 phase-body（设置 maxHeight）
+  PHASES.forEach(function(phase){
+    var body = document.getElementById("body-" + phase.id);
+    if (body) body.style.maxHeight = body.scrollHeight + "px";
+  });
+}
+
+function toggleTask(id, defaultVal) {
+  var cur = isDone(id, defaultVal);
+  setDone(id, !cur);
+  render();
+}
+
+function togglePhase(phaseId) {
+  var phase = document.getElementById("phase-" + phaseId);
+  var body  = document.getElementById("body-"  + phaseId);
+  if (phase.classList.contains("collapsed")) {
+    phase.classList.remove("collapsed");
+    body.style.maxHeight = body.scrollHeight + "px";
+  } else {
+    phase.classList.add("collapsed");
+    body.style.maxHeight = "0px";
+  }
+}
+
+// 初始化
+render();
+</script>
+</body>
+</html>
